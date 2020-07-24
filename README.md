@@ -32,7 +32,7 @@
 <a href="https://devchallenge.now.sh/"> DevChallenge</a> permite que você evolua suas skills como programador! Participe da nossa <a href="https://discord.gg/yvYXhGj">comunidade</a> o/
 
 # Desafio
-Seu desafio é criar um cronômetro que utiliza a técnico do pomodoro para ajudar na gestão de tempo! O modelo final está disponível na pasta "design"
+Seu desafio é criar um cronômetro que utiliza a técnico do pomodoro para ajudar na gestão de tempo! O modelo final está disponível na pasta "template/design"
 
 ## Requisitos:
 - Sua página deverá uma tela inicial onde será possível configurar o tempo de trabalho, tempo de pausa e a quantidade de vezes que isso será feito.<br>
@@ -63,7 +63,7 @@ Verde: #219653<br>
 Amarelo: #F2C94C
 
 ## Modelo:
-O modelo final desktop está disponível na pasta `./design`
+O modelo final desktop está disponível na pasta `./template/design`
 
 ## Icones
 Para os ícones, recomendamos que utilize alguma biblioteca, como o Font Awesome
