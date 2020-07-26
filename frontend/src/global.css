@@ -1,0 +1,55 @@
+:root {
+  --success: #219653;
+  --warning: #F2C94C;
+  --dangerous: #DF1616;
+
+  --color-accent: #3e4ead;
+}
+
+root[theme=light] {
+  --background: #333853;
+  --foreground: #eeeeee;
+
+  --background2: #3C4262;
+  --foreground2: #ffffff;
+}
+
+:root[theme=dark] {
+  --background: #333853;
+  --foreground: #a3a6b5;
+
+  --background2: #3C4262;
+  --foreground2: #eeeeee;
+}
+
+* {
+  padding: 0;
+  margin: 0;
+  outline: 0;
+  box-sizing: border-box;
+  user-select: none;
+}
+
+html {
+  overflow-x: hidden;
+}
+
+html, body, #root {
+  background-color: var(--background);
+  color: var(--foreground);
+
+  font-family: 'Roboto', sans-serif;
+  font-size: 16px;
+
+  height: 100%;
+  min-width: 500px;
+}
+
+#root {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  min-height: 100%;
+  padding: 10px;
+}
