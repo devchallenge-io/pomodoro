@@ -1,9 +1,13 @@
 import Button from './Button';
-import Container from './Container';
 import NumberPicker from './NumberPicker';
+
+import device from './utils/device';
+
+export default {
+  device
+};
 
 export {
   Button,
-  Container,
   NumberPicker
 };

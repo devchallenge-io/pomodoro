@@ -1,7 +1,7 @@
 :root {
-  --success: #219653;
-  --warning: #F2C94C;
-  --dangerous: #DF1616;
+  --timer-green: #219653;
+  --timer-yellow: #F2C94C;
+  --timer-red: #DF1616;
 
   --color-accent: #3e4ead;
 }
@@ -34,15 +34,16 @@ html {
   overflow-x: hidden;
 }
 
+html, body {
+  height: 100%;
+}
+
 html, body, #root {
   background-color: var(--background);
   color: var(--foreground);
 
   font-family: 'Roboto', sans-serif;
   font-size: 16px;
-
-  height: 100%;
-  min-width: 500px;
 }
 
 #root {
@@ -50,6 +51,11 @@ html, body, #root {
   align-items: center;
   justify-content: center;
 
-  min-height: 100%;
   padding: 10px;
+
+  min-height: 100%;
+}
+
+input, textarea, button, select, a {
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }

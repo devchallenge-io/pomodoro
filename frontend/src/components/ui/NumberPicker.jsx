@@ -6,26 +6,31 @@ import {
   FaArrowAltCircleDown
 } from 'react-icons/fa';
 
+import device from './utils/device';
+
 export default class NumberPicker extends React.Component {
   constructor(props){
     super(props);
 
     this.state = {
-      value: props.value ?? 0,
-      min: props.min ?? 0,
-      max: props.max ?? 0
+      value: parseInt(props.value) ?? 0,
+      min: parseInt(props.min) ?? 0,
+      max: parseInt(props.max) ?? 0
     };
   }
 
   handleChange(event){
     const value = parseInt(
-      event.target.value != "" ? 
+      event.target.value !== "" ? 
         event.target.value : 0
     );
 
     if(value > this.state.max || value < this.state.min) return;
 
     this.setState({ value });
+
+    if(typeof(this.props.onChange) == 'function')
+      this.props.onChange({ value });
   }
 
   handleArrowUp(event){
@@ -35,6 +40,9 @@ export default class NumberPicker extends React.Component {
     this.setState({
       value: this.state.value +1
     });
+
+    if(typeof(this.props.onChange) == 'function')
+      this.props.onChange({ value: this.state.value+1 });
   }
 
   handleArrowDown(){
@@ -44,6 +52,9 @@ export default class NumberPicker extends React.Component {
     this.setState({
       value: this.state.value -1
     });
+
+    if(typeof(this.props.onChange) == 'function')
+      this.props.onChange({ value: this.state.value-1 });
   }
 
   render(){
@@ -53,14 +64,14 @@ export default class NumberPicker extends React.Component {
           <ArrowButton onClick={() => this.handleArrowUp(this)}>
             <FaArrowAltCircleUp
               size={32}
-              color={'var(--foreground)'}
+              color={'#666c8b'}
             />
           </ArrowButton>
 
           <ArrowButton onClick={() => this.handleArrowDown(this)}>
             <FaArrowAltCircleDown
               size={32}
-              color={'var(--foreground)'}
+              color={'#666c8b'}
             />
           </ArrowButton>
         </ArrowButtonContainer>
@@ -83,9 +94,11 @@ export default class NumberPicker extends React.Component {
 };
 
 const Container = styled.div`
-  margin: 0 5px;
+  margin: 5px;
   display: flex;
   flex-direction: row;
+
+  transform: translateX(-21px);
 `;
 
 const Editor = styled.input`
@@ -116,6 +129,7 @@ const Label = styled.p`
   margin-top: 10px;
   font-size: 18px;
   font-weight: 600;
+  text-align: center;
 `;
 
 const ArrowButtonContainer = styled.div`
@@ -130,13 +144,22 @@ const ArrowButton = styled.button`
   border: 0;
   background-color: transparent;
   cursor: pointer;
-  filter: brightness(75%);
 
   :hover {
-    filter: brightness(100%);
+    filter: brightness(120%);
   }
 
   :first-child {
     margin-bottom: 7px;
+  }
+
+  @media ${device.tablet} {
+    :hover {
+      filter: brightness(100%)
+    }
+
+    :active {
+      filter: brightness(120%)
+    }
   }
 `;

@@ -1,4 +1,7 @@
+import React from 'react';
 import styled from 'styled-components';
+
+import device from './utils/device';
 
 export default styled.button`
   padding: 15px;
@@ -15,7 +18,21 @@ export default styled.button`
 
   cursor: pointer;
 
+  ::selection {
+    background-color: red;
+  }
+
   :hover {
     filter: brightness(120%)
+  }
+
+  @media ${device.tablet} {
+    :hover {
+      filter: brightness(100%)
+    }
+
+    :active {
+      filter: brightness(120%)
+    }
   }
 `;
