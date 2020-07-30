@@ -29,7 +29,7 @@ export default class NumberPicker extends React.Component {
 
     this.setState({ value });
 
-    if(typeof(this.props.onChange) == 'function')
+    if(typeof(this.props.onChange) === 'function')
       this.props.onChange({ value });
   }
 
@@ -41,8 +41,8 @@ export default class NumberPicker extends React.Component {
       value: this.state.value +1
     });
 
-    if(typeof(this.props.onChange) == 'function')
-      this.props.onChange({ value: this.state.value+1 });
+    if(typeof(this.props.onChange) === 'function')
+      this.props.onChange({ value: this.state.value +1 });
   }
 
   handleArrowDown(){
@@ -53,8 +53,8 @@ export default class NumberPicker extends React.Component {
       value: this.state.value -1
     });
 
-    if(typeof(this.props.onChange) == 'function')
-      this.props.onChange({ value: this.state.value-1 });
+    if(typeof(this.props.onChange) === 'function')
+      this.props.onChange({ value: this.state.value -1 });
   }
 
   render(){

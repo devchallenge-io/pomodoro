@@ -3,7 +3,8 @@ import styled from 'styled-components';
 import { useHistory, Link } from 'react-router-dom';
 
 import {
-  FaCog
+  FaPlay,
+  FaPause
 } from 'react-icons/fa';
 
 import UI, {
@@ -12,73 +13,161 @@ import UI, {
 
 import {
   buildStyles,
-  CircularProgressbar,
-  CircularProgressbarWithChildren
+  CircularProgressbar
 } from "react-circular-progressbar";
 
 export default function Timer(){
   const history = useHistory();
-
-  const time_work = parseInt(localStorage.getItem('work')) * 60;
-  const time_pause = parseInt(localStorage.getItem('pause')) * 60;
-  const steps_section = parseInt(localStorage.getItem('section'));
   
-  const [status, setStatus] = useState('stop');
-  const [step, setStep] = useState(1);
-  const [seconds, setSeconds] = useState(time_work);
-  const [percentage, setPercentage] = useState(50);
-  const [progressColor, setProgressColor] = useState('green');
+  const config = {
+    time: {
+      work: parseInt(localStorage.getItem('work')) * 60,
+      pause: parseInt(localStorage.getItem('pause')) * 60,
+      long_pause: (parseInt(localStorage.getItem('pause')) * 5) * 60
+    },
+    steps: parseInt(localStorage.getItem('section') ?? 0)
+  };
+
+  const colors = {
+    work: 'var(--timer-green)',
+    pause: 'var(--timer-yellow)',
+    long_pause: 'var(--timer-cyan)',
+    stop: 'var(--timer-red)',
+
+    clear: 'var(--background2)'
+  }
+
+  const status_label = {
+    work: "Trabalho",
+    pause: "Pausa",
+    long_pause: "Pausa Longa"
+  }
 
   useEffect(() => {
-    if(time_work == null || time_pause == null || steps_section == null){
+    if(isNaN(config.time.work) || isNaN(config.time.pause) || config.steps === 0){
       history.replace('/config');
     }
-  }, [time_work, time_pause, steps_section]);
+  }, [config.time.work, config.time.pause, config.steps, history]);
+  
+  const [running, setRunning] = useState(false);  // true, false
+  const [status, setStatus] = useState('work');   // 'work', 'short_pause', 'long_pause'
+  const [step, setStep] = useState(0);            // 0 ~ ${steps_section}
+  const [percentage, setPercentage] = useState(100);
+  const [time, setTime] = useState(config.time[status]);    // time in seconds
 
   useEffect(() => {
-    setPercentage(100 - ((seconds / time_work) * 100));
+    const interval = setInterval(() => {
+      if(running && time > 0)
+        setTime(time -1);
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [running, time]);
 
-    if(seconds > 0){
-      setTimeout(() => {
-        setSeconds(seconds -1);
-      }, 1000);
+  useEffect(() => {
+    if(running){
+      setPercentage(100 - ((time / config.time[status]) * 100));
+
+      if(time === 0){
+        setRunning(false);
+
+        if(status === 'work'){
+          handleOnFinishWork();
+
+          if(step + 1 >= config.steps){
+            setStatus('long_pause');
+            setTime(config.time.long_pause);
+          }
+          else {
+            setStatus('pause');
+            setTime(config.time.pause);
+          }
+        }
+        else
+        if(status === 'pause'){
+          handleOnFinishPause();
+          setStatus('work');
+          setTime(config.time.work);
+          setStep(step +1);
+        }
+        else
+        if(status === 'long_pause'){
+          handleOnFinishLongPause();
+          setStatus('work');
+          setTime(config.time.work);
+          setStep(0);
+        }
+      }
     }
-  }, [seconds]);
+  }, [time, running]);
+
+  function handleToggleRun(event){
+    setRunning(!running);
+    (running ? handleOnPause : handleOnPlay)();
+  }
+  
+  function handleOnPlay(){
+    console.log('on play event');
+  }
+
+  function handleOnPause(){
+    console.log('on pause event');
+  }
+
+  function handleOnFinishWork(){
+    console.log('on finish work event');
+  }
+
+  function handleOnFinishPause(){
+    console.log('on finish pause event');
+  }
+
+  function handleOnFinishLongPause(){
+    console.log('on finish long pause event');
+  }
 
   return (
     <Container>
       <Header>
         <h1>Pomodoro</h1>
-
         <Link to={"/config"}>
           <Button>Config</Button>
         </Link>
       </Header>
       <Wrap>
-        <div>
-          <CircularProgress
-            value={percentage}
-            text={`
-              ${String(parseInt((seconds/60))).padStart(2, '0')}:${String(parseInt(seconds % 60)).padStart(2, '0')}
-            `}
-            strokeWidth={1.8}
-            background
-            backgroundPadding={10}
-            styles={buildStyles({
-              pathColor: `var(--timer-${progressColor})`,
-              trailColor: `var(--background2)`,
-            })}
-          />
-        </div>
-        <div>
-          <Status color={progressColor}>
-            <span>
-              Trabalho
-            </span>
-
-
-          </Status>
-        </div>
+        <CircularProgress
+          value={percentage}
+          text={`
+            ${String(parseInt((time/60))).padStart(2, '0')}:${String(parseInt(time % 60)).padStart(2, '0')}
+          `}
+          strokeWidth={1.75}
+          background
+          backgroundPadding={9}
+          styles={buildStyles({
+            pathColor: colors[status],
+            trailColor: `var(--background2)`,
+          })}
+        />
+        <Status color={colors[status]}>
+          <span>
+            { status_label[status] }
+          </span>
+          <div>
+            {
+              Array(config.steps).fill().map(Math.random).map((key, i) => (
+                <StepIndicator key={key} color={
+                  i <= step ? colors[status] : colors.clear
+                } />
+              ))
+            }
+          </div>
+          <Button onClick={handleToggleRun.bind(this)}>
+            {running ? (
+              <FaPause size={36} />
+            ) : (
+              <FaPlay size={36} />
+            )}
+          </Button>
+        </Status>
       </Wrap>
     </Container>
   );
@@ -117,14 +206,8 @@ const Wrap = styled.div`
   align-items: center;
   justify-content: center;
 
-  > div {
-    /* background-color: red; */
-    align-items: center;
-    flex-direction: column;
-  }
-
-  > div:first-child {
-    /* background-color: yellow; */
+  > * {
+    width: 325px;
   }
 
   @media ${UI.device.tablet} {
@@ -133,7 +216,7 @@ const Wrap = styled.div`
 `;
 
 const CircularProgress = styled(CircularProgressbar)`
-  width: 325px;
+  /* width: 325px; */
   box-shadow: 0 0 10px #40455e;
   border-radius: 50%;
 
@@ -151,9 +234,40 @@ const CircularProgress = styled(CircularProgressbar)`
 `;
 
 const Status = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
   > span {
     font-size: 50px;
     font-weight: 600;
-    color: var(--timer-${props => props.color});
+    color: ${props => props.color};
   }
+  
+  > button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    max-width: 100px;
+    padding: 20px 25px;
+  }
+
+  > div {
+    /* background-color: red; */
+    padding: 10px 5px;
+    margin-top: 7.5px;
+    margin-bottom: 22px;
+  }
+`;
+
+const StepIndicator = styled.span`
+  background-color: ${props => props.color};
+
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+
+  margin: 0px 5px;
 `;

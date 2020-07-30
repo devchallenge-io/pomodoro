@@ -1,4 +1,4 @@
-import React from 'react';
+// import React from 'react';
 import styled from 'styled-components';
 
 import device from './utils/device';
@@ -9,7 +9,7 @@ export default styled.button`
   background-color: var(--background2);
   color: var(--foreground);
 
-  border-radius: 5px;
+  border-radius: 7.5px;
   border: none;
   box-shadow: 1px 3px 5px #24283a;
 
