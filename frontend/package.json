@@ -11,7 +11,8 @@
     "react-dom": "^16.13.1",
     "react-icons": "^3.10.0",
     "react-router-dom": "^5.2.0",
-    "styled-components": "^5.1.1"
+    "styled-components": "^5.1.1",
+    "use-sound": "^1.0.2"
   },
   "scripts": {
     "start": "npx react-scripts start",

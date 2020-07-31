@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { useHistory, Link } from 'react-router-dom';
+import useSound from 'use-sound';
 
 import {
   FaPlay,
@@ -15,6 +16,12 @@ import {
   buildStyles,
   CircularProgressbar
 } from "react-circular-progressbar";
+
+import soundEndOfWork from '../../assets/end_of_work.mp3';
+import soundEndOfPause from '../../assets/end_of_pause.mp3';
+import soundEndOfLongPause from '../../assets/end_of_long_pause.mp3';
+
+
 
 export default function Timer(){
   const history = useHistory();
@@ -49,6 +56,10 @@ export default function Timer(){
     }
   }, [config.time.work, config.time.pause, config.steps, history]);
   
+  const [playSfxEndOfWork] = useSound(soundEndOfWork);
+  const [playSfxEndOfPause] = useSound(soundEndOfPause);
+  const [playSfxEndOfLongPause] = useSound(soundEndOfLongPause);
+  
   const [running, setRunning] = useState(false);  // true, false
   const [status, setStatus] = useState('work');   // 'work', 'short_pause', 'long_pause'
   const [step, setStep] = useState(0);            // 0 ~ ${steps_section}
@@ -59,7 +70,7 @@ export default function Timer(){
     const interval = setInterval(() => {
       if(running && time > 0)
         setTime(time -1);
-    }, 1000);
+    }, 5);
     return () => clearInterval(interval);
   }, [running, time]);
 
@@ -98,8 +109,9 @@ export default function Timer(){
         }
       }
     }
+    // eslint-disable-next-line
   }, [time, running]);
-
+  
   function handleToggleRun(event){
     setRunning(!running);
     (running ? handleOnPause : handleOnPlay)();
@@ -114,15 +126,15 @@ export default function Timer(){
   }
 
   function handleOnFinishWork(){
-    console.log('on finish work event');
+    playSfxEndOfWork();
   }
 
   function handleOnFinishPause(){
-    console.log('on finish pause event');
+    playSfxEndOfPause();
   }
 
   function handleOnFinishLongPause(){
-    console.log('on finish long pause event');
+    playSfxEndOfLongPause();
   }
 
   return (
@@ -177,7 +189,6 @@ const Container = styled.div`
   background-color: var(--background);
 
   border-radius: 5px;
-  /* border: 1px solid rgba(0, 0, 0, 0.8); */
 
   width: 100%;
   max-width: 800px;
@@ -216,7 +227,6 @@ const Wrap = styled.div`
 `;
 
 const CircularProgress = styled(CircularProgressbar)`
-  /* width: 325px; */
   box-shadow: 0 0 10px #40455e;
   border-radius: 50%;
 
@@ -255,7 +265,6 @@ const Status = styled.div`
   }
 
   > div {
-    /* background-color: red; */
     padding: 10px 5px;
     margin-top: 7.5px;
     margin-bottom: 22px;
