@@ -21,8 +21,6 @@ import soundEndOfWork from '../../assets/end_of_work.mp3';
 import soundEndOfPause from '../../assets/end_of_pause.mp3';
 import soundEndOfLongPause from '../../assets/end_of_long_pause.mp3';
 
-
-
 export default function Timer(){
   const history = useHistory();
   
@@ -70,7 +68,7 @@ export default function Timer(){
     const interval = setInterval(() => {
       if(running && time > 0)
         setTime(time -1);
-    }, 5);
+    }, 1000);
     return () => clearInterval(interval);
   }, [running, time]);
 

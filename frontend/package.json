@@ -2,6 +2,7 @@
   "name": "pomodoro",
   "version": "0.1.0",
   "private": true,
+  "homepage": "https://pomodoro.app.br",
   "dependencies": {
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",
@@ -16,7 +17,7 @@
   },
   "scripts": {
     "start": "npx react-scripts start",
-    "build": "npx react-scripts build && cp build/index.html build/404.html",
+    "build": "set \"PUBLIC_URL=https://pomodoro.app.br\" && npx react-scripts build && cp build/index.html build/404.html",
     "test": "npx react-scripts test",
     "eject": "npx react-scripts eject",
     "deploy": "npx gh-pages -d build",
